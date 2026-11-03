@@ -1,0 +1,740 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Fasting Metabolism Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+/* Layout: a lab bench. Row 1: protocol panel (subject, meal, clock) beside the live body view. Row 2: instrument bar. Row 3: lab notebook (table / graph). Row 4: graded worksheet. Shares type, palette and organ drawings with the BIO200 metabolism simulation. */
+:root{
+  --bg:#f3f5f4; --surface:#ffffff; --sunk:#f7f9f8; --ink:#1d2827; --muted:#5a6866; --line:#d4dcd8; --faint:#e6ebe8; --accent:#0d6a70; --accent-ink:#ffffff; --accent-soft:#e1f0f0;
+  --ok:#2f7d4f; --warn:#a45f0a; --bad:#a8402f;
+  --glu:#e07a1f; --aa:#cf4a3c; --fa:#c99a12; --ket:#16897e; --gl:#a84a8c; --ins:#3567c8; --gcg:#7b4fc0;
+  --r1:#1f6fb8; --r2:#c0561b; --r3:#7a4fc0; --r4:#2e8540;
+  --vessel:#f3cdc8; --vessel-edge:#d99d95;
+  --o-brain:#e9def3; --e-brain:#a88cc4; --o-panc:#f3e6c9; --e-panc:#c9a868;
+  --o-liver:#c98a6c; --e-liver:#94573d; --gut:#eab7a6; --gut-in:#f6d9cf;
+  --o-muscle:#e6a7a3; --e-muscle:#b5625c; --fiber:#cf7a74;
+  --cell:#fbf3d9; --cell-edge:#d9bf72; --droplet:#efc94c; --glyco:#fff6e8; --glyco-edge:#7a3f25;
+  --display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111716; --surface:#192120; --sunk:#151c1b; --ink:#e4ebe8; --muted:#98a7a3; --line:#2f3c3a; --faint:#243030; --accent:#53c2c8; --accent-ink:#0c1615; --accent-soft:#1d3436;
+  --ok:#5cc287; --warn:#e6a640; --bad:#ec7a66;
+  --glu:#f39a4a; --aa:#ef7d70; --fa:#e8c24a; --ket:#4fc3b4; --gl:#d77cbc; --ins:#79a0f0; --gcg:#ad8ae6;
+  --r1:#4a90d9; --r2:#d9773a; --r3:#9670d6; --r4:#3fa66a;
+  --vessel:#4a2626; --vessel-edge:#7d3c37;
+  --o-brain:#3a3150; --e-brain:#8d74ad; --o-panc:#4a3f25; --e-panc:#a88a4c;
+  --o-liver:#7a4733; --e-liver:#b77a5c; --gut:#6e3d33; --gut-in:#8c5446;
+  --o-muscle:#6e3434; --e-muscle:#b06a64; --fiber:#9c4f4a;
+  --cell:#3d3620; --cell-edge:#8a7740; --droplet:#d9b23e; --glyco:#f4e3c8; --glyco-edge:#2a1a12; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111716; --surface:#192120; --sunk:#151c1b; --ink:#e4ebe8; --muted:#98a7a3; --line:#2f3c3a; --faint:#243030; --accent:#53c2c8; --accent-ink:#0c1615; --accent-soft:#1d3436;
+  --ok:#5cc287; --warn:#e6a640; --bad:#ec7a66;
+  --glu:#f39a4a; --aa:#ef7d70; --fa:#e8c24a; --ket:#4fc3b4; --gl:#d77cbc; --ins:#79a0f0; --gcg:#ad8ae6;
+  --r1:#4a90d9; --r2:#d9773a; --r3:#9670d6; --r4:#3fa66a;
+  --vessel:#4a2626; --vessel-edge:#7d3c37;
+  --o-brain:#3a3150; --e-brain:#8d74ad; --o-panc:#4a3f25; --e-panc:#a88a4c;
+  --o-liver:#7a4733; --e-liver:#b77a5c; --gut:#6e3d33; --gut-in:#8c5446;
+  --o-muscle:#6e3434; --e-muscle:#b06a64; --fiber:#9c4f4a;
+  --cell:#3d3620; --cell-edge:#8a7740; --droplet:#d9b23e; --glyco:#f4e3c8; --glyco-edge:#2a1a12; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+#newRun summary::-webkit-details-marker{display:none}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:24px 48px;display:grid;gap:16px}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:end}
+.eyebrow{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.7rem,4vw,2.3rem);line-height:1.1;margin:2px 0 4px}
+.lede{margin:0;color:var(--muted);max-width:70ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;min-width:0}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.card-h h2,.card-h h3{margin:0;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.pad{padding:14px 16px;display:grid;gap:12px}
+label.f{display:grid;gap:4px;font-size:.85rem;color:var(--muted);font-weight:700}
+input[type=text],select,textarea{font:inherit;color:var(--ink);background:var(--sunk);border:1.5px solid var(--line);border-radius:8px;padding:7px 9px;width:100%}
+textarea{min-height:84px;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn{font:inherit;font-weight:700;border:1.5px solid var(--accent);background:transparent;color:var(--accent);padding:7px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.sm{padding:4px 9px;font-size:.84rem}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.muted{color:var(--muted)}
+.small{font-size:.84rem}
+.num{font-variant-numeric:tabular-nums}
+
+/* bench */
+.bench{display:grid;grid-template-columns:330px minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:980px){.bench{grid-template-columns:minmax(0,1fr)}}
+.sec{display:grid;gap:8px;padding-bottom:12px;border-bottom:1px dashed var(--line)}
+.sec:last-child{border-bottom:0;padding-bottom:0}
+.sec-t{font-size:.76rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.runpill{display:flex;gap:8px;align-items:center;font-weight:700}
+.swatch{width:12px;height:12px;border-radius:3px;flex:none}
+.foods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.food{font:inherit;font-size:.84rem;text-align:left;border:1.5px solid var(--line);background:var(--sunk);color:var(--ink);border-radius:8px;padding:5px 8px;cursor:pointer;line-height:1.25}
+.food small{display:block;color:var(--muted);font-size:.74rem}
+.food:hover{border-color:var(--accent)}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.plate{background:var(--sunk);border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;display:grid;gap:6px;font-size:.88rem}
+.plate ul{list-style:none;margin:0;padding:0;display:grid;gap:3px}
+.plate li{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.plate li button{font:inherit;border:0;background:none;color:var(--muted);cursor:pointer;padding:0 4px}
+.macro{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--faint)}
+.macro span{height:100%}
+.clock{display:flex;align-items:baseline;gap:8px}
+.clock strong{font-family:var(--display);font-size:2rem;font-variant-numeric:tabular-nums;line-height:1}
+.live{overflow:hidden}
+.livescroll{overflow-x:auto}
+#map{display:block;width:100%;min-width:680px;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;padding:8px 16px 12px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend svg{width:16px;height:16px;flex:none}
+.toggle{display:inline-flex;gap:6px;align-items:center;font-size:.84rem;color:var(--muted)}
+
+/* instruments */
+.inst{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;padding:12px 16px}
+.inst .result{flex:1 1 100%}
+.tool{display:flex;gap:10px;align-items:center}
+.tubes{display:flex;gap:3px}
+.tubes i{width:7px;height:20px;border-radius:2px 2px 4px 4px;background:var(--bad);opacity:.85}
+.tubes i.used{background:var(--faint);opacity:1}
+.result{background:var(--sunk);border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;font-size:.88rem;display:flex;flex-wrap:wrap;gap:4px 16px;min-height:42px;align-items:center}
+.result b{font-variant-numeric:tabular-nums}
+
+/* notebook */
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tab{font:inherit;font-weight:700;font-size:.86rem;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:5px 12px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.86rem;font-variant-numeric:tabular-nums}
+th,td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-size:.76rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--sunk);position:sticky;top:0}
+th:first-child,td:first-child{text-align:left}
+td.na{color:var(--line)}
+.empty{padding:18px;color:var(--muted);text-align:center}
+.graphctl{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.runchk{display:inline-flex;gap:6px;align-items:center;font-size:.86rem}
+#chart{display:block;width:100%;min-width:560px;height:auto}
+#chart text{font-family:var(--body);fill:var(--muted);font-size:12px}
+#chart .lab{fill:var(--ink);font-weight:700}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);font-size:.8rem;padding:5px 8px;border-radius:6px;z-index:5}
+
+/* worksheet */
+.ws{display:grid;gap:14px}
+.exp-intro{display:grid;gap:6px}
+.exp-intro h3{font-family:var(--display);font-weight:600;font-size:1.3rem;margin:0}
+.exp-intro p{margin:0;max-width:75ch}
+.note{font-size:.86rem;background:var(--accent-soft);border-radius:8px;padding:8px 12px;max-width:75ch}
+.block{border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:10px}
+.block h4{margin:0;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.q{display:grid;gap:6px}
+.q p{margin:0;font-weight:700;max-width:75ch}
+.opts{display:grid;gap:4px}
+.opts label{display:flex;gap:8px;align-items:flex-start;font-size:.92rem;cursor:pointer}
+.opts input{margin-top:4px}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.checks li{display:flex;gap:8px;align-items:flex-start;font-size:.9rem}
+.checks .ic{flex:none;width:18px;height:18px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:11px;font-weight:700;margin-top:2px}
+.checks li.done .ic{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.locked{font-size:.84rem;color:var(--ok);font-weight:700}
+.status{font-size:.82rem;font-weight:700}
+.report{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78rem;min-height:220px}
+footer{font-size:.82rem;color:var(--muted);max-width:90ch}
+.confirm{display:inline-flex;gap:6px;align-items:center}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">BIO200 · Chapter 10 · Virtual lab</div>
+      <h1>Fasting Metabolism Lab</h1>
+      <p class="lede">Feed a research volunteer, follow them through a fast, and collect blood and tissue samples to find out how the body fuels itself between meals.</p>
+    </div>
+    <label class="toggle"><input type="checkbox" id="showAct" checked> Show organ activity in live view</label>
+  </header>
+
+  <div class="bench">
+    <section class="card" aria-label="Protocol">
+      <div class="card-h"><h2>Protocol</h2><span class="runpill" id="runPill"></span></div>
+      <div class="pad">
+        <div class="sec">
+          <div class="sec-t">Run</div>
+          <select id="runSel" aria-label="Switch run"></select>
+          <details id="newRun">
+            <summary class="btn primary" style="display:inline-block;list-style:none">+ Start a new run</summary>
+            <div class="pad" style="padding:10px 0 0">
+              <label class="f">Run name<input type="text" id="nrLabel" placeholder="e.g. Carb-heavy meal"></label>
+              <label class="f">Subject<select id="nrProfile">
+                <option value="typical">Typical adult</option>
+                <option value="t1d">Adult with untreated Type 1 diabetes</option>
+                <option value="lean">Lean adult (smaller fat stores)</option>
+              </select></label>
+              <label class="f">For experiment<select id="nrExp">
+                <option value="A">A: Find the three states</option>
+                <option value="B">B: Meal composition</option>
+                <option value="C">C: No insulin</option>
+                <option value="free">Free exploration</option>
+              </select></label>
+              <button class="btn primary" id="nrStart" type="button">Start run at hour 0</button>
+            </div>
+          </details>
+        </div>
+
+        <div class="sec">
+          <div class="sec-t">Build a meal</div>
+          <div class="presets" id="presets"></div>
+          <details id="foodDet"><summary class="small" style="cursor:pointer;font-weight:700;color:var(--accent)">Or choose individual foods</summary><div class="foods" id="foods" style="margin-top:8px"></div></details>
+          <div class="plate">
+            <div class="row" style="justify-content:space-between"><b>Plate</b><button class="btn sm" id="clearPlate" type="button">Clear</button></div>
+            <ul id="plateList"></ul>
+            <div class="macro" id="macroBar" aria-hidden="true"></div>
+            <div class="small muted num" id="plateTot"></div>
+          </div>
+          <button class="btn primary" id="serve" type="button">Serve meal now</button>
+          <div class="small muted" id="mealLog"></div>
+        </div>
+
+        <div class="sec">
+          <div class="sec-t">Clock</div>
+          <div class="clock"><strong id="clockH">0.0</strong><span>hours into run</span></div>
+          <div class="row">
+            <button class="btn primary" id="playBtn" type="button">▶ Run</button>
+            <select id="speed" aria-label="Clock speed" style="width:auto">
+              <option value="0.5">0.5 h per second</option>
+              <option value="2" selected>2 h per second</option>
+              <option value="8">8 h per second</option>
+            </select>
+          </div>
+          <div class="row">
+            <span class="small muted">Skip ahead:</span>
+            <button class="btn sm" data-jump="1" type="button">+1 h</button>
+            <button class="btn sm" data-jump="6" type="button">+6 h</button>
+            <button class="btn sm" data-jump="24" type="button">+24 h</button>
+          </div>
+          <div class="small muted">Runs end at hour 96. Skipping ahead does not take samples for you.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card live" aria-label="Live view">
+      <div class="card-h"><h2>Live view: what the volunteer's body is doing right now</h2><span class="small muted">Watch to form hypotheses. Measure to get numbers.</span></div>
+      <div class="livescroll"><svg id="map" viewBox="0 0 1100 710" role="img" aria-label="Animated body map showing fuel moving between organs through the bloodstream"></svg></div>
+      <div class="legend" id="legend" aria-label="Legend"></div>
+      <div class="inst" style="border-top:1px solid var(--line)" aria-label="Instruments">
+      <div class="tool">
+        <button class="btn primary" id="drawBtn" type="button">Draw blood</button>
+        <div><div class="tubes" id="tubes" aria-hidden="true"></div><div class="small muted" id="tubeTxt"></div></div>
+      </div>
+      <div class="tool">
+        <button class="btn primary" id="biopBtn" type="button">Take biopsy</button>
+        <div class="small muted" id="biopTxt"></div>
+      </div>
+      <div class="result" id="result" aria-live="polite"><span class="muted">Results of your latest sample appear here and in the notebook.</span></div>
+      </div>
+    </section>
+  </div>
+
+
+  <section class="card" aria-label="Lab notebook">
+    <div class="card-h">
+      <h2>Lab notebook</h2>
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="tabTable" aria-selected="true" type="button">Data table</button>
+        <button class="tab" role="tab" id="tabGraph" aria-selected="false" type="button">Graph</button>
+      </div>
+    </div>
+    <div class="pad" id="nbTable">
+      <div class="row"><label class="f" style="min-width:240px">Showing run<select id="tblRun"></select></label></div>
+      <div class="tablewrap" id="tbl"></div>
+    </div>
+    <div class="pad" id="nbGraph" hidden>
+      <div class="graphctl">
+        <label class="f" style="min-width:220px">Measurement<select id="gVar"></select></label>
+        <label class="f" style="min-width:140px">Hours shown<select id="gRange"><option value="auto">All</option><option value="6">First 6 h</option><option value="24">First 24 h</option></select></label>
+        <div id="gRuns" class="row"></div>
+      </div>
+      <div class="tablewrap"><svg id="chart" viewBox="0 0 900 340" role="img" aria-label="Graph of your measurements over time"></svg></div>
+    </div>
+  </section>
+
+  <section class="card" aria-label="Worksheet">
+    <div class="card-h">
+      <h2>Lab worksheet · graded</h2>
+      <div class="tabs" role="tablist" id="wsTabs"></div>
+    </div>
+    <div class="pad ws" id="ws"></div>
+  </section>
+
+  <footer>Draft for faculty review. This lab runs on a simplified computer model of human metabolism, tuned to reproduce typical textbook trends. Its numbers are model output, not data from real people, and include a little measurement noise. Your work is saved in this browser only; use “Copy my lab report” to submit it. Content follows the Chapter 10 section <a href="https://inkie.pressbooks.pub/bio200/chapter/metabolic-states-of-the-body/" style="color:var(--accent)">Metabolic States of the Body</a>.</footer>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+(function(){
+"use strict";
+/* ============ model ============ */
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const DT=1/12, TMAX=96;
+function initState(profile){const t1d=profile==="t1d",lean=profile==="lean";
+  return{t:0,G:t1d?165:88,I:t1d?1.5:7,Gn:t1d?110:70,K:t1d?0.6:0.1,FFA:t1d?0.9:0.4,BUN:t1d?17:13,LG:t1d?45:80,MG:t1d?300:350,
+    Fat:lean?6000:15000,Prot:10000,gutC:0,gutP:0,gutF:0,t1d,fl:{}}}
+function step(s){const dt=DT;
+  const ins=s.I/(s.I+20),gcn=s.Gn/(s.Gn+150);
+  const kC=0.72/(1+s.gutF/25);const Ra=kC*s.gutC,aaAbs=0.7*s.gutP,fatAbs=0.35*s.gutF;
+  const synth=s.LG<110?55*ins*clamp((s.G-75)/70,0,1.5)*(1-s.LG/112):0;
+  const glyco=14*gcn*Math.pow(1-ins,2)*s.LG/(s.LG+12);
+  const lip=s.Fat>200?0.8+9*Math.pow(1-ins,3):0.3;
+  const GNG=(1.0+13*gcn*(1-ins))*(s.t1d?1.25:1);
+  const DNL=s.LG>90?5*ins*clamp((s.G-105)/60,0,1):0;
+  const ketFrac=0.7*s.K/(s.K+3);
+  const brain=5.4*(1-ketFrac)*s.G/(s.G+25), other=1.6*s.G/(s.G+30);
+  const mus=(0.3+34*Math.pow(ins,1.3))*s.G/100*(1-0.3*clamp(s.FFA-0.4,0,1));
+  const adi=3*ins*s.G/100, renal=s.G>180?0.08*(s.G-180):0;
+  const dG=6.7*(Ra+glyco+GNG-synth-DNL-brain-other-mus-adi-renal);
+  const Iss=s.t1d?1.5:3+Math.max(0,s.G-85)*0.9+0.15*aaAbs;
+  const Gss=s.t1d?125+0.6*aaAbs:Math.max(30,45+Math.max(0,105-s.G)*2.6+1.2*aaAbs-30*ins);
+  const FFAss=0.1+0.1*lip+0.06*lip*(1-Math.min(1,s.LG/100));
+  const kprod=(s.t1d?0.85:1.0)*s.FFA*Math.pow(1-ins,2)*gcn*(s.t1d?1:Math.pow(1-Math.min(1,s.LG/100),2));
+  const kclear=s.K*0.4*(1+3*ins)/(1+s.K/0.8);
+  const glyc=0.1*lip,aaGNG=Math.max(0,GNG-glyc-1.0),pb=0.9+aaGNG/0.6,psyn=0.45*aaAbs*(0.4+ins);
+  const BUNss=7+1.4*(pb+Math.max(0,aaAbs-psyn));
+  s.G=Math.max(30,s.G+dG*dt);s.I+=(Iss-s.I)/0.25*dt;s.Gn+=(Gss-s.Gn)/0.4*dt;
+  s.FFA+=(FFAss-s.FFA)/0.6*dt;s.K=Math.max(0.03,s.K+(kprod-kclear)*dt);s.BUN+=(BUNss-s.BUN)/6*dt;
+  s.LG=clamp(s.LG+(synth-glyco)*dt,0,115);s.MG=clamp(s.MG+(mus*0.7*(1-s.MG/450)-0.5*(1-ins))*dt,0,450);
+  s.Fat+=(fatAbs*0.92+DNL*0.35-lip)*dt;s.Prot+=(psyn-pb)*dt;
+  s.gutC=Math.max(0,s.gutC-Ra*dt);s.gutP=Math.max(0,s.gutP-aaAbs*dt);s.gutF=Math.max(0,s.gutF-fatAbs*dt);
+  s.t=Math.round((s.t+dt)*1e6)/1e6;
+  s.fl={Ra,aaAbs,fatAbs,synth,glyco,GNG,DNL,brain,mus,adi,lip,kprod,pb,psyn,ketFrac,ins,glyc}}
+
+/* ============ data ============ */
+const FOODS=[
+ {n:"Spaghetti, 2 cups",c:80,p:14,f:6},{n:"Bagel",c:50,p:10,f:2},{n:"Orange juice, 12 oz",c:39,p:2,f:0},{n:"Apple",c:25,p:0,f:0},
+ {n:"Lentils, 1 cup",c:40,p:18,f:1},{n:"Greek yogurt, plain",c:7,p:17,f:0},{n:"Chicken breast",c:0,p:35,f:4},{n:"Protein shake",c:5,p:30,f:2},
+ {n:"Eggs, 2 scrambled",c:2,p:12,f:10},{n:"Bacon, 3 slices",c:0,p:9,f:10},{n:"Avocado, half",c:9,p:2,f:15},{n:"Butter, 1 tbsp",c:0,p:0,f:11},
+ {n:"Olive oil, 1 tbsp",c:0,p:0,f:14},{n:"Almonds, 1 oz",c:6,p:6,f:14}];
+const PRESETS=[
+ {n:"Carb-heavy",items:{"Spaghetti, 2 cups":1,"Orange juice, 12 oz":1,"Apple":1}},
+ {n:"Protein-heavy",items:{"Chicken breast":2,"Protein shake":1,"Greek yogurt, plain":1}},
+ {n:"Fat-heavy",items:{"Eggs, 2 scrambled":1,"Bacon, 3 slices":2,"Avocado, half":1,"Butter, 1 tbsp":1}},
+ {n:"Mixed",items:{"Bagel":1,"Eggs, 2 scrambled":1,"Chicken breast":1}}];
+const PROFILES={typical:"Typical adult",t1d:"Untreated Type 1 diabetes",lean:"Lean adult"};
+const VARS=[
+ {k:"G",n:"Blood glucose",u:"mg/dL",d:0,type:"blood"},
+ {k:"I",n:"Insulin",u:"µU/mL",d:1,type:"blood"},
+ {k:"Gn",n:"Glucagon",u:"pg/mL",d:0,type:"blood"},
+ {k:"K",n:"Ketone bodies",u:"mmol/L",d:2,type:"blood"},
+ {k:"FFA",n:"Free fatty acids",u:"mmol/L",d:2,type:"blood"},
+ {k:"BUN",n:"Blood urea nitrogen",u:"mg/dL",d:1,type:"blood"},
+ {k:"LG",n:"Liver glycogen",u:"g",d:0,type:"biopsy"},
+ {k:"MG",n:"Muscle glycogen",u:"g",d:0,type:"biopsy"}];
+const TUBES=10,BIOPS=3;
+const RUNCOL=["--r1","--r2","--r3","--r4"];
+
+/* ============ persistence ============ */
+const KEY="bio200-fasting-lab-v1";
+let DB={runs:[],cur:-1,plate:{},ws:{},name:"",section:"",nextId:1};
+try{const raw=localStorage.getItem(KEY);if(raw)DB=Object.assign(DB,JSON.parse(raw))}catch(e){}
+let saveT=null;function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){}},300)}
+
+/* ============ run handling ============ */
+let S=null; // live model state for the current run
+const run=()=>DB.runs[DB.cur];
+function simulateTo(r,t){const s=initState(r.profile);const meals=[...r.meals].sort((a,b)=>a.t-b.t);let mi=0;
+  while(s.t<t-1e-9){while(mi<meals.length&&meals[mi].t<=s.t+1e-9){s.gutC+=meals[mi].c;s.gutP+=meals[mi].p;s.gutF+=meals[mi].f;mi++}step(s)}
+  while(mi<meals.length&&meals[mi].t<=s.t+1e-9){s.gutC+=meals[mi].c;s.gutP+=meals[mi].p;s.gutF+=meals[mi].f;mi++}
+  if(!s.fl.ins){const c={...s};step(c);s.fl=c.fl}
+  return s}
+function loadRun(i){DB.cur=i;const r=run();S=r?simulateTo(r,r.t):null;stopPlay();refreshAll();save()}
+function newRun(label,profile,exp){const id=DB.nextId++;
+  DB.runs.push({id,label:label||`Run ${id}`,profile,exp,t:0,meals:[],samples:[],color:RUNCOL[(DB.runs.length)%RUNCOL.length]});
+  loadRun(DB.runs.length-1)}
+function advance(hours){const r=run();if(!r)return;const target=Math.min(TMAX,Math.round((r.t+hours)*12)/12);
+  while(S.t<target-1e-9)step(S);r.t=S.t;if(r.t>=TMAX-1e-9)stopPlay();refreshClock();if(Math.floor(r.t)!==Math.floor(r.t-hours))refreshWS();save()}
+
+/* ============ measurement ============ */
+let seed=Date.now()%100000;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+const noise=(v,pct)=>v*(1+(rnd()*2-1)*pct);
+function draw(type){const r=run();if(!r)return;
+  const used=r.samples.filter(x=>x.type===type).length;if(used>=(type==="blood"?TUBES:BIOPS))return;
+  if(r.samples.some(x=>x.type===type&&Math.abs(x.t-r.t)<1e-6)){flash(`You already took a ${type==="blood"?"blood sample":"biopsy"} at hour ${r.t.toFixed(1)}. Let time pass first.`);return}
+  const v={};VARS.filter(x=>x.type===type).forEach(x=>{const raw=S[x.k];v[x.k]=+Math.max(0,noise(raw,x.k==="LG"?0.06:0.04)).toFixed(x.d)});
+  r.samples.push({t:+r.t.toFixed(2),type,v});
+  showResult(r.samples[r.samples.length-1]);refreshInstruments();refreshNotebook();refreshWS();save()}
+function showResult(smp){const el=document.getElementById("result");
+  el.innerHTML=`<span class="muted">Hour ${smp.t.toFixed(1)} · ${smp.type==="blood"?"blood":"biopsy"}:</span>`+
+   VARS.filter(x=>smp.v[x.k]!==undefined).map(x=>`<span>${x.n} <b>${smp.v[x.k].toFixed(x.d)}</b> ${x.u}</span>`).join("")}
+function flash(msg){document.getElementById("result").innerHTML=`<span style="color:var(--warn);font-weight:700">${msg}</span>`}
+
+/* ============ live view (SVG) ============ */
+const NS="http://www.w3.org/2000/svg";const svg=document.getElementById("map");
+const el=(n,a,p)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
+const txt=(p,x,y,s,st,anchor="middle")=>{const t=el("text",{x,y,"text-anchor":anchor},p);t.setAttribute("style","font-family:var(--body);fill:var(--ink);"+st);t.textContent=s;return t};
+const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+const SHAPES={
+  glu:{n:"Glucose",tag:"polygon",a:{points:"5.89,3.40 0.00,6.80 -5.89,3.40 -5.89,-3.40 -0.00,-6.80 5.89,-3.40"}},
+  aa:{n:"Amino acids",tag:"circle",a:{r:5.6}},
+  fa:{n:"Fats & fatty acids",tag:"rect",a:{x:-8.5,y:-3.6,width:17,height:7.2,rx:3.6}},
+  ket:{n:"Ketone bodies",tag:"rect",a:{x:-5.2,y:-5.2,width:10.4,height:10.4,rx:2.5}},
+  gl:{n:"Lactate & glycerol",tag:"polygon",a:{points:"0.00,-6.40 6.09,-1.98 3.76,5.18 -3.76,5.18 -6.09,-1.98"}},
+  ins:{n:"Insulin",tag:"path",a:{d:"M0,-6.5 L6.5,5.5 L-6.5,5.5 Z"}},
+  gcg:{n:"Glucagon",tag:"rect",a:{x:-4.8,y:-4.8,width:9.6,height:9.6,transform:"rotate(45)"}}};
+const shape=(t,p)=>{const d=SHAPES[t];return el(d.tag,Object.assign({},d.a,{style:`fill:var(--${t});stroke:var(--surface);stroke-width:1.2`}),p)};
+(function(){const L=document.getElementById("legend");for(const t in SHAPES){const sp=document.createElement("span");
+  const ic=el("svg",{viewBox:"-9.5 -9.5 19 19","aria-hidden":"true"});shape(t,ic);sp.appendChild(ic);sp.appendChild(document.createTextNode(SHAPES[t].n));L.appendChild(sp)}})();
+
+const LOOP="M440,190 H660 A110,110 0 0 1 770,300 V400 A110,110 0 0 1 660,510 H440 A110,110 0 0 1 330,400 V300 A110,110 0 0 1 440,190 Z";
+const CON={brain:{A:[550,124],B:[550,176]},pancreas:{A:[246,132],B:[362,222]},liver:{A:[250,350],B:[316,350]},
+  intestine:{A:[262,578],B:[362,478]},muscle:{A:[852,350],B:[784,350]},adipose:{A:[842,566],B:[738,478]}};
+const INNER={brain:[550,62],pancreas:[150,104],liver:[120,350],intestine:[150,598],muscle:[968,350],adipose:[940,598]};
+const defs=el("defs",{},svg);
+el("path",{d:LOOP,fill:"none",style:"stroke:var(--vessel-edge)","stroke-width":40},svg);
+el("path",{d:LOOP,fill:"none",style:"stroke:var(--vessel)","stroke-width":34},svg);
+[[550,190,0],[770,350,90],[550,510,180],[330,350,270]].forEach(([x,y,r])=>el("path",{d:"M-6,-8 L4,0 L-6,8",transform:`translate(${x},${y}) rotate(${r})`,fill:"none",style:"stroke:var(--vessel-edge)","stroke-width":3,"stroke-linecap":"round"},svg));
+for(const k in CON){const{A,B}=CON[k];
+  el("line",{x1:A[0],y1:A[1],x2:B[0],y2:B[1],style:"stroke:var(--vessel-edge)","stroke-width":32,"stroke-linecap":"round"},svg);
+  el("line",{x1:A[0],y1:A[1],x2:B[0],y2:B[1],style:"stroke:var(--vessel)","stroke-width":26,"stroke-linecap":"round"},svg)}
+el("path",{d:LOOP,fill:"none",style:"stroke:var(--vessel)","stroke-width":28},svg);
+const O={};const nameSt="font-weight:700;font-size:18px;",procSt="font-size:14px;fill:var(--muted);";
+// brain
+(function(){const g=el("g",{transform:"translate(550,70)"},svg);
+  el("ellipse",{rx:98,ry:48,style:"fill:var(--o-brain);stroke:var(--e-brain)","stroke-width":2.5},g);
+  ["M-62,-22 C-44,-40 -24,-8 -4,-28 C16,-46 38,-14 62,-30","M-80,6 C-54,-10 -32,22 -6,4 C18,-12 46,20 80,4","M-50,32 C-26,18 6,40 34,26 C46,20 56,26 62,30","M0,-46 L0,44"].forEach(d=>el("path",{d,fill:"none",style:"stroke:var(--e-brain)","stroke-width":2.5,"stroke-linecap":"round"},g));
+  txt(svg,670,62,"Brain",nameSt,"start");O.brain=txt(svg,670,84,"",procSt,"start")})();
+// pancreas
+(function(){const g=el("g",{transform:"translate(160,108)"},svg);
+  el("path",{d:"M-92,6 C-76,-26 22,-30 76,-14 C100,-6 100,16 76,20 C22,30 -64,34 -92,6 Z",style:"fill:var(--o-panc);stroke:var(--e-panc)","stroke-width":2.5},g);
+  [[-40,4],[0,-4],[38,4],[-66,8]].forEach(([x,y])=>el("circle",{cx:x,cy:y,r:7,style:"fill:var(--surface);stroke:var(--e-panc)","stroke-width":2},g));
+  txt(svg,160,170,"Pancreas",nameSt);O.pancreas=txt(svg,160,192,"",procSt)})();
+// liver
+(function(){const g=el("g",{transform:"translate(135,350)"},svg);
+  const d="M-114,-18 C-92,-62 40,-68 104,-48 C126,-40 122,-4 94,16 C52,48 -10,64 -62,60 C-104,56 -124,22 -114,-18 Z";
+  const lp=el("path",{d,style:"fill:var(--o-liver);stroke:var(--e-liver)","stroke-width":2.5},g);
+  el("path",{d:"M-6,-60 C2,-20 -2,22 -22,58",fill:"none",style:"stroke:var(--e-liver)","stroke-width":2},g);
+  const pts=[];let sd=11;const r2=()=>(sd=(sd*9301+49297)%233280)/233280;
+  for(let y=-44;y<=46;y+=17)for(let x=-100;x<=100;x+=19){const xx=x+((y/17)%2?9:0);let ok=true;
+    try{for(const[dx,dy]of[[0,0],[8,0],[-8,0],[0,8],[0,-8]])if(!lp.isPointInFill(new DOMPoint(xx+dx,y+dy)))ok=false}catch(e){ok=Math.abs(xx)<80&&Math.abs(y)<40}
+    if(ok&&Math.abs(xx+6)>8)pts.push([xx,y])}
+  pts.sort(()=>r2()-.5);
+  O.liverGran=pts.map(([x,y])=>el("circle",{cx:x,cy:y,r:6,style:"fill:var(--glyco);stroke:var(--glyco-edge);stroke-width:1.5;transition:opacity .6s, r .6s"},g));
+  txt(svg,135,438,"Liver",nameSt);O.liver=txt(svg,135,460,"",procSt)})();
+// intestine
+(function(){const g=el("g",{transform:"translate(160,598)"},svg);
+  const d="M-104,-24 C-64,-46 -44,-4 -14,-24 C16,-44 36,-4 66,-24 C96,-40 112,0 82,12 C52,24 32,-2 2,16 C-28,34 -48,0 -78,20 C-102,34 -96,44 -70,40";
+  el("path",{d,fill:"none",style:"stroke:var(--e-liver)","stroke-width":24,"stroke-linecap":"round",opacity:.35},g);
+  el("path",{d,fill:"none",style:"stroke:var(--gut)","stroke-width":20,"stroke-linecap":"round"},g);
+  O.gutIn=el("path",{d,fill:"none",style:"stroke:var(--gut-in);transition:opacity .6s","stroke-width":8,"stroke-linecap":"round"},g);
+  O.gutDots=el("g",{},g);
+  txt(svg,90,672,"Small intestine",nameSt,"start");O.intestine=txt(svg,90,694,"",procSt,"start")})();
+// muscle
+(function(){const g=el("g",{transform:"translate(968,350)"},svg);
+  const d="M-114,0 C-74,-66 74,-66 114,0 C74,66 -74,66 -114,0 Z";
+  el("path",{d,style:"fill:var(--o-muscle);stroke:var(--e-muscle)","stroke-width":2.5},g);
+  const cp=el("clipPath",{id:"mclip"},defs);el("path",{d},cp);
+  const inner=el("g",{"clip-path":"url(#mclip)"},g);
+  O.fibers=[-36,-12,12,36].map(y=>({y,r:el("rect",{x:-104,y:y-10,width:208,height:20,rx:10,style:"fill:var(--fiber)"},inner)}));
+  O.mGran=[];[-36,-12,12,36].forEach(y=>[-60,-30,0,30,60].forEach(x=>O.mGran.push(el("circle",{cx:x+(y%24?8:0),cy:y,r:4.5,style:"fill:var(--glyco);stroke:var(--glyco-edge);stroke-width:1.2;transition:opacity .6s"},inner))));
+  txt(svg,968,442,"Muscle & heart",nameSt);O.muscle=txt(svg,968,464,"",procSt)})();
+// adipose
+(function(){const g=el("g",{transform:"translate(940,598)"},svg);
+  O.cells=[[-82,-14],[-30,-30],[24,-18],[78,-26],[-54,26],[0,22],[54,24],[104,14]].map(([x,y])=>({
+    m:el("circle",{cx:x,cy:y,r:30,style:"fill:var(--cell);stroke:var(--cell-edge);stroke-width:2"},g),
+    dr:el("circle",{cx:x+2,cy:y+1,r:24,style:"fill:var(--droplet)"},g)}));
+  txt(svg,800,684,"Adipose (fat) tissue",nameSt,"start");O.adipose=txt(svg,800,704,"",procSt,"start")})();
+// center of loop: clock only, no numbers that would replace measurement
+(function(){const g=el("g",{},svg);
+  txt(g,550,262,"HOUR","font-size:12px;font-weight:700;letter-spacing:.12em;fill:var(--muted);");
+  O.hour=txt(g,550,322,"0.0","font-family:var(--display);font-weight:800;font-size:58px;");
+  O.since=txt(g,550,356,"",procSt);
+  O.subj=txt(g,550,410,"","font-size:15px;font-weight:700;");
+  O.runl=txt(g,550,432,"",procSt)})();
+const gTrav=el("g",{},svg);
+
+// routing through the loop
+const loopRef=el("path",{d:LOOP,fill:"none",stroke:"none"},defs);const LT=loopRef.getTotalLength();
+const nearestS=(x,y)=>{let best=0,bd=1e9;for(let t=0;t<LT;t+=2){const p=loopRef.getPointAtLength(t);const d=(p.x-x)**2+(p.y-y)**2;if(d<bd){bd=d;best=t}}return best};
+for(const k in CON)CON[k].s=nearestS(...CON[k].B);
+const LOOPPTS=[];for(let t=0;t<LT;t+=4){const p=loopRef.getPointAtLength(t);LOOPPTS.push([p.x,p.y])}
+const perp=k=>{const{A,B}=CON[k];const dx=B[0]-A[0],dy=B[1]-A[1],L=Math.hypot(dx,dy);return[-dy/L*7,dx/L*7]};
+function mkRoute(from,to){const pts=[];const po=perp(from),pi=perp(to);
+  pts.push(INNER[from],[CON[from].A[0]+po[0],CON[from].A[1]+po[1]],[CON[from].B[0]+po[0],CON[from].B[1]+po[1]]);
+  let s1=CON[from].s,s2=CON[to].s;if(s2<=s1)s2+=LT;
+  for(let t=s1;t<=s2;t+=6){const p=loopRef.getPointAtLength(t%LT);pts.push([p.x,p.y])}
+  pts.push([CON[to].B[0]-pi[0],CON[to].B[1]-pi[1]],[CON[to].A[0]-pi[0],CON[to].A[1]-pi[1]],INNER[to]);
+  const cum=[0];for(let j=1;j<pts.length;j++)cum.push(cum[j-1]+Math.hypot(pts[j][0]-pts[j-1][0],pts[j][1]-pts[j-1][1]));
+  return{pts,cum,len:cum[cum.length-1]}}
+const ROUTES={};const route=(a,b)=>ROUTES[a+">"+b]||(ROUTES[a+">"+b]=mkRoute(a,b));
+function posAt(r,d){let lo=0,hi=r.cum.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(r.cum[m]<=d)lo=m;else hi=m}
+  const seg=r.cum[hi]-r.cum[lo]||1,f=(d-r.cum[lo])/seg;return[r.pts[lo][0]+(r.pts[hi][0]-r.pts[lo][0])*f,r.pts[lo][1]+(r.pts[hi][1]-r.pts[lo][1])*f]}
+
+// particles: travelers (organ to organ) and the circulating pool
+const trav=[];const pool=[];const acc={};const SPEED=130;
+function flowsNow(){const f=S.fl;if(!f||f.ins===undefined)return[];const out=[];
+  const add=(a,b,t,rate)=>{if(rate>0.02)out.push([a,b,t,rate])};
+  const gSrc=[["intestine",f.Ra],["liver",f.glyco+f.GNG]];
+  const gSink=[["liver",f.synth+f.DNL],["muscle",f.mus],["adipose",f.adi],["brain",f.brain]];
+  const tot=gSink.reduce((a,x)=>a+x[1],0)||1;
+  gSrc.forEach(([src,sr])=>gSink.forEach(([dst,sk])=>{if(src!==dst)add(src,dst,"glu",sr*sk/tot*0.11)}));
+  add("intestine","liver","aa",f.aaAbs*0.6*0.035);add("intestine","muscle","aa",f.aaAbs*0.4*0.035);
+  add("muscle","liver","aa",Math.max(0,f.pb-0.9)*0.12);
+  add("intestine","adipose","fa",f.fatAbs*0.09);add("liver","adipose","fa",f.DNL*0.25);
+  add("adipose","muscle","fa",f.lip*0.6*0.07);add("adipose","liver","fa",f.lip*0.4*0.07);
+  add("adipose","liver","gl",f.glyc*0.5);add("muscle","liver","gl",(1-f.ins)*0.12);
+  add("liver","brain","ket",f.kprod*0.9);add("liver","muscle","ket",f.kprod*0.9);
+  const I=S.I,Gn=S.Gn;["liver","muscle","adipose"].forEach(o=>add("pancreas",o,"ins",Math.max(0,I-2)*0.006));
+  add("pancreas","liver","gcg",Math.max(0,Gn-35)*0.004);
+  return out}
+function spawn(a,b,t){const g=el("g",{},gTrav);shape(t,g);trav.push({r:route(a,b),d:0,g})}
+function syncPool(){const want={glu:Math.min(48,Math.max(2,Math.round((S.G-40)/6))),ket:Math.min(24,Math.round(S.K*4))};
+  for(const t in want){let have=pool.filter(p=>p.t===t);
+    while(have.length<want[t]){const g=el("g",{},gTrav);const inner=el("g",{transform:`translate(${(rnd()*10-5).toFixed(1)},${(rnd()*14-7).toFixed(1)})`},g);shape(t,inner);
+      const p={t,g,d:rnd()*LT,op:0};pool.push(p);have.push(p)}
+    while(have.length>want[t]){const p=have.pop();p.dying=true}}}
+let lastFrame=performance.now();
+function frame(now){const dt=Math.min(0.1,(now-lastFrame)/1000);lastFrame=now;
+  if(S){
+    if(playing){playAcc+=(+document.getElementById("speed").value)*dt;const n=Math.floor(playAcc/DT);if(n>0){playAcc-=n*DT;advance(n*DT)}}
+    if(!reduce){
+      flowsNow().forEach(([a,b,t,rate])=>{const k=a+b+t;acc[k]=(acc[k]||0)+rate*dt;while(acc[k]>=1&&trav.length<240){acc[k]-=1;spawn(a,b,t)}});
+      for(let j=trav.length-1;j>=0;j--){const p=trav[j];p.d+=SPEED*dt;if(p.d>=p.r.len){p.g.remove();trav.splice(j,1);continue}
+        const[x,y]=posAt(p.r,p.d);const fade=Math.min(1,p.d/30,(p.r.len-p.d)/30);p.g.setAttribute("transform",`translate(${x.toFixed(1)},${y.toFixed(1)})`);p.g.setAttribute("opacity",fade.toFixed(2))}
+      syncPool();
+      for(let j=pool.length-1;j>=0;j--){const p=pool[j];p.d=(p.d+70*dt)%LT;p.op=p.dying?p.op-dt*1.5:Math.min(1,p.op+dt*1.5);
+        if(p.op<=0&&p.dying){p.g.remove();pool.splice(j,1);continue}
+        const q=loopRef.getPointAtLength(p.d);p.g.setAttribute("transform",`translate(${q.x.toFixed(1)},${q.y.toFixed(1)})`);p.g.setAttribute("opacity",p.op.toFixed(2))}
+    }
+    paintOrgans();
+  }
+  requestAnimationFrame(frame)}
+let lastPaint=0;
+function paintOrgans(){const now=performance.now();if(now-lastPaint<250)return;lastPaint=now;const f=S.fl;const r=run();
+  const nL=Math.round(O.liverGran.length*Math.min(1,S.LG/110));O.liverGran.forEach((c,j)=>{c.style.opacity=j<nL?1:.16;c.style.r=j<nL?"6px":"3px"});
+  const nM=Math.round(O.mGran.length*Math.min(1,S.MG/420));O.mGran.forEach((c,j)=>c.style.opacity=j<nM?1:.15);
+  const pr=S.Prot/10000,fh=8+12*clamp((pr-0.9)/0.1,0,1);O.fibers.forEach(x=>{x.r.setAttribute("height",fh.toFixed(1));x.r.setAttribute("y",(x.y-fh/2).toFixed(1))});
+  const fat0=r.profile==="lean"?6000:15000,fr=S.Fat/15000;const dr=(r.profile==="lean"?6:9)+15*clamp((S.Fat/fat0-0.8)/0.2,0,1)*(r.profile==="lean"?0.6:1);
+  O.cells.forEach(c=>{c.dr.setAttribute("r",dr.toFixed(1));c.m.setAttribute("r",(dr+6).toFixed(1))});
+  const gut=S.gutC+S.gutP+S.gutF;O.gutIn.style.opacity=gut>3?1:.25;
+  O.gutDots.textContent="";if(gut>3){const n=Math.min(7,Math.ceil(gut/20));[[-80,-28,"glu"],[-30,-20,"aa"],[20,-30,"fa"],[70,-22,"glu"],[40,8,"aa"],[-10,16,"fa"],[-60,14,"glu"]].slice(0,n).forEach(([x,y,t])=>shape(t,el("g",{transform:`translate(${x},${y})`},O.gutDots)))}
+  O.hour.textContent=S.t.toFixed(1);
+  const lm=r.meals.length?r.meals[r.meals.length-1].t:null;O.since.textContent=lm===null?"No meal served yet":`${(S.t-lm).toFixed(1)} h since last meal`;
+  O.subj.textContent=PROFILES[r.profile];O.runl.textContent=r.label;
+  const on=document.getElementById("showAct").checked;
+  const act={
+    intestine:gut>3?"Absorbing nutrients":"Empty",
+    pancreas:S.I>15?"Releasing insulin":S.Gn>80?"Releasing glucagon":"Low hormone output",
+    liver:f.synth>f.glyco+f.GNG?"Storing glycogen":f.kprod>0.08?"Making glucose and ketones":f.glyco>f.GNG?"Releasing glucose from glycogen":"Making new glucose",
+    muscle:f.mus>4?"Taking up glucose":f.kprod>0.08?"Burning fatty acids and ketones":"Burning mostly fatty acids",
+    adipose:f.fatAbs>1||f.DNL>1?"Storing fat":f.lip>3?"Releasing fatty acids":"Little change",
+    brain:S.K>1?"Burning glucose and ketones":"Burning glucose"};
+  for(const k in act)O[k].textContent=on?act[k]:""}
+
+/* ============ protocol UI ============ */
+const $=id=>document.getElementById(id);
+function foodBy(n){return FOODS.find(x=>x.n===n)}
+function plateTotals(){let c=0,p=0,f=0;for(const n in DB.plate){const x=foodBy(n);c+=x.c*DB.plate[n];p+=x.p*DB.plate[n];f+=x.f*DB.plate[n]}return{c,p,f,kcal:c*4+p*4+f*9}}
+function renderPlate(){const ul=$("plateList");ul.innerHTML="";const names=Object.keys(DB.plate);
+  if(!names.length)ul.innerHTML='<li class="muted">Empty. Add foods or pick a preset.</li>';
+  names.forEach(n=>{const li=document.createElement("li");li.innerHTML=`<span>${DB.plate[n]} × ${n}</span>`;const b=document.createElement("button");b.type="button";b.textContent="✕";b.setAttribute("aria-label","Remove "+n);
+    b.onclick=()=>{DB.plate[n]--;if(DB.plate[n]<=0)delete DB.plate[n];renderPlate();save()};li.appendChild(b);ul.appendChild(li)});
+  const t=plateTotals();const k=t.kcal||1;
+  $("macroBar").innerHTML=`<span style="width:${t.c*4/k*100}%;background:var(--glu)"></span><span style="width:${t.p*4/k*100}%;background:var(--aa)"></span><span style="width:${t.f*9/k*100}%;background:var(--fa)"></span>`;
+  $("plateTot").textContent=t.kcal?`${Math.round(t.kcal)} kcal · carbohydrate ${t.c} g · protein ${t.p} g · fat ${t.f} g`:"";
+  $("serve").disabled=!t.kcal||!run()}
+PRESETS.forEach(pr=>{const b=document.createElement("button");b.className="btn sm";b.type="button";b.textContent=pr.n;b.onclick=()=>{DB.plate={...pr.items};renderPlate();save()};$("presets").appendChild(b)});
+FOODS.forEach(fd=>{const b=document.createElement("button");b.className="food";b.type="button";b.innerHTML=`${fd.n}<small>C ${fd.c} · P ${fd.p} · F ${fd.f} g</small>`;
+  b.onclick=()=>{DB.plate[fd.n]=(DB.plate[fd.n]||0)+1;renderPlate();save()};$("foods").appendChild(b)});
+$("clearPlate").onclick=()=>{DB.plate={};renderPlate();save()};
+$("serve").onclick=()=>{const r=run();if(!r)return;const t=plateTotals();if(!t.kcal)return;
+  const items=Object.entries(DB.plate).map(([n,q])=>`${q}× ${n}`).join(", ");
+  r.meals.push({t:r.t,c:t.c,p:t.p,f:t.f,kcal:Math.round(t.kcal),items});S.gutC+=t.c;S.gutP+=t.p;S.gutF+=t.f;refreshProtocol();refreshWS();save()};
+$("nrStart").onclick=()=>{newRun($("nrLabel").value.trim(),$("nrProfile").value,$("nrExp").value);$("nrLabel").value="";$("newRun").open=false};
+function openNewRun(){const d=$("newRun");d.open=true;if(["A","B","C"].includes(wsTab))$("nrExp").value=wsTab;setTimeout(()=>$("nrLabel").focus(),50)}
+$("runSel").onchange=e=>{if(e.target.value==="new"){e.target.value=DB.cur>=0?DB.cur:"";openNewRun();return}loadRun(+e.target.value)};
+$("newRun").addEventListener("toggle",()=>{if($("newRun").open&&["A","B","C"].includes(wsTab))$("nrExp").value=wsTab});
+let playing=false,playAcc=0;
+function stopPlay(){playing=false;$("playBtn").textContent="▶ Run"}
+$("playBtn").onclick=()=>{if(!run())return;if(playing){stopPlay();return}if(run().t>=TMAX-1e-9)return;playing=true;$("playBtn").textContent="❚❚ Pause"};
+document.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{stopPlay();advance(+b.dataset.jump)});
+$("drawBtn").onclick=()=>draw("blood");$("biopBtn").onclick=()=>draw("biopsy");
+$("showAct").onchange=()=>{lastPaint=0};
+
+function refreshProtocol(){const r=run();const sel=$("runSel");sel.innerHTML="";
+  if(!DB.runs.length){sel.innerHTML='<option value="">No runs yet</option>'}
+  DB.runs.forEach((x,i)=>{const o=document.createElement("option");o.value=i;o.textContent=`${x.label} · ${PROFILES[x.profile]} · Exp ${x.exp==="free"?"—":x.exp}`;if(i===DB.cur)o.selected=true;sel.appendChild(o)});{const o=document.createElement("option");o.value="new";o.textContent="+ Start a new run…";sel.appendChild(o)}
+  $("runPill").innerHTML=r?`<span class="swatch" style="background:var(${r.color})"></span>${esc(r.label)}`:"";
+  $("mealLog").innerHTML=r&&r.meals.length?"Meals this run: "+r.meals.map(m=>`hour ${m.t.toFixed(1)} (${m.kcal} kcal)`).join("; "):"No meals served this run.";
+  renderPlate();refreshClock();refreshInstruments()}
+function refreshClock(){const r=run();$("clockH").textContent=r?r.t.toFixed(1):"–";
+  const dis=!r||r.t>=TMAX-1e-9;$("playBtn").disabled=!r;document.querySelectorAll("[data-jump]").forEach(b=>b.disabled=dis)}
+function refreshInstruments(){const r=run();const nb=r?r.samples.filter(x=>x.type==="blood").length:0,nbi=r?r.samples.filter(x=>x.type==="biopsy").length:0;
+  $("tubes").innerHTML=Array.from({length:TUBES},(_,i)=>`<i class="${i<nb?"used":""}"></i>`).join("");
+  $("tubeTxt").textContent=r?`${TUBES-nb} of ${TUBES} tubes left`:"Start a run first";
+  $("biopTxt").textContent=r?`${BIOPS-nbi} of ${BIOPS} biopsies left · liver + muscle glycogen`:"";
+  $("drawBtn").disabled=!r||nb>=TUBES;$("biopBtn").disabled=!r||nbi>=BIOPS}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ============ notebook ============ */
+$("tabTable").onclick=()=>nbTab("table");$("tabGraph").onclick=()=>nbTab("graph");
+function nbTab(w){$("tabTable").setAttribute("aria-selected",w==="table");$("tabGraph").setAttribute("aria-selected",w==="graph");$("nbTable").hidden=w!=="table";$("nbGraph").hidden=w!=="graph";if(w==="graph")drawChart()}
+VARS.forEach(v=>{const o=document.createElement("option");o.value=v.k;o.textContent=`${v.n} (${v.u})`;$("gVar").appendChild(o)});
+$("gVar").onchange=drawChart;$("gRange").onchange=drawChart;$("tblRun").onchange=renderTable;
+const gSel={};
+function refreshNotebook(){const ts=$("tblRun");ts.innerHTML="";
+  DB.runs.forEach((x,i)=>{const o=document.createElement("option");o.value=i;o.textContent=x.label;ts.appendChild(o)});
+  ts.value=DB.cur;
+  renderTable();
+  const gr=$("gRuns");gr.innerHTML="";DB.runs.forEach((x,i)=>{if(gSel[x.id]===undefined)gSel[x.id]=i===DB.cur;
+    const l=document.createElement("label");l.className="runchk";l.innerHTML=`<input type="checkbox" ${gSel[x.id]?"checked":""}><span class="swatch" style="background:var(${x.color})"></span>${esc(x.label)}`;
+    l.querySelector("input").onchange=e=>{gSel[x.id]=e.target.checked;drawChart()};gr.appendChild(l)});
+  if(!$("nbGraph").hidden)drawChart()}
+function renderTable(){const r=DB.runs[+$("tblRun").value];const box=$("tbl");
+  if(!r){box.innerHTML='<div class="empty">Start a run, then draw blood or take a biopsy. Your measurements will be recorded here.</div>';return}
+  const rows=[...r.samples].sort((a,b)=>a.t-b.t);
+  if(!rows.length){box.innerHTML=`<div class="empty">No samples yet in “${esc(r.label)}”.</div>`;return}
+  box.innerHTML=`<table><thead><tr><th>Hour</th><th>Sample</th>${VARS.map(v=>`<th>${v.n}<br>${v.u}</th>`).join("")}</tr></thead><tbody>${
+    rows.map(s=>`<tr><td>${s.t.toFixed(1)}</td><td style="text-align:left">${s.type==="blood"?"Blood":"Biopsy"}</td>${VARS.map(v=>s.v[v.k]===undefined?'<td class="na">·</td>':`<td>${s.v[v.k].toFixed(v.d)}</td>`).join("")}</tr>`).join("")}</tbody></table>`}
+const chart=$("chart");const tip=$("tip");
+function niceMax(v){const p=Math.pow(10,Math.floor(Math.log10(v||1)));const m=v/p;return(m<=1?1:m<=2?2:m<=2.5?2.5:m<=5?5:10)*p}
+function drawChart(){const k=$("gVar").value;const V=VARS.find(v=>v.k===k);chart.textContent="";
+  const W=900,H=340,ml=62,mr=120,mt=20,mb=46;
+  const runs=DB.runs.filter(x=>gSel[x.id]);
+  const series=runs.map(r=>({r,pts:r.samples.filter(s=>s.v[k]!==undefined).sort((a,b)=>a.t-b.t).map(s=>[s.t,s.v[k]])}));
+  const all=series.flatMap(s=>s.pts);
+  const rng=$("gRange").value;let xmax=rng==="auto"?Math.max(6,...all.map(p=>p[0]),...runs.map(r=>r.t)):+rng;
+  xmax=rng==="auto"?(xmax<=6?6:xmax<=12?12:xmax<=24?24:xmax<=48?48:xmax<=72?72:96):xmax;
+  const vis=all.filter(p=>p[0]<=xmax);const ymax=niceMax(Math.max(...vis.map(p=>p[1]),k==="G"?140:0.0001)*1.1);
+  const X=t=>ml+t/xmax*(W-ml-mr),Y=v=>H-mb-v/ymax*(H-mt-mb);
+  for(let i=0;i<=5;i++){const v=ymax*i/5,y=Y(v);el("line",{x1:ml,x2:W-mr,y1:y,y2:y,style:`stroke:var(--${i?"faint":"line"})`,"stroke-width":1},chart);
+    el("text",{x:ml-8,y:y+4,"text-anchor":"end"},chart).textContent=(+v.toFixed(V.d>1?2:V.d)).toString()}
+  const xs=xmax<=6?1:xmax<=12?2:xmax<=24?4:xmax<=48?8:12;
+  for(let t=0;t<=xmax+1e-9;t+=xs){el("text",{x:X(t),y:H-mb+18,"text-anchor":"middle"},chart).textContent=t}
+  el("text",{x:(ml+W-mr)/2,y:H-8,"text-anchor":"middle"},chart).textContent="Hours into run";
+  el("text",{x:14,y:mt+(H-mt-mb)/2,"text-anchor":"middle",transform:`rotate(-90 14 ${mt+(H-mt-mb)/2})`},chart).textContent=`${V.n} (${V.u})`;
+  if(k==="G"){const b=el("rect",{x:ml,width:W-ml-mr,y:Y(Math.min(120,ymax)),height:Math.max(0,Y(80)-Y(Math.min(120,ymax))),style:"fill:var(--ok)",opacity:.08},chart);
+    el("text",{x:W-mr-6,y:Y(Math.min(120,ymax))+14,"text-anchor":"end"},chart).textContent="80–120 normal range"}
+  if(!all.length){el("text",{x:(ml+W-mr)/2,y:H/2,"text-anchor":"middle"},chart).textContent=runs.length?`No ${V.n.toLowerCase()} measurements yet in the selected runs.`:"Tick at least one run above to plot it.";return}
+  const labels=[];
+  series.forEach(({r,pts})=>{const col=`var(${r.color})`;const p2=pts.filter(p=>p[0]<=xmax);
+    r.meals.filter(m=>m.t<=xmax).forEach(m=>el("path",{d:`M${X(m.t)},${H-mb} l-5,9 h10 z`,style:`fill:${col}`},chart));
+    if(p2.length>1)el("path",{d:"M"+p2.map(p=>`${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(" L"),fill:"none",style:`stroke:${col}`,"stroke-width":2,"stroke-linejoin":"round"},chart);
+    p2.forEach(p=>{const c=el("circle",{cx:X(p[0]),cy:Y(p[1]),r:4.5,style:`fill:${col};stroke:var(--surface)`,"stroke-width":2},chart);
+      const hit=el("circle",{cx:X(p[0]),cy:Y(p[1]),r:12,fill:"transparent"},chart);
+      hit.onmouseenter=e=>{tip.hidden=false;tip.textContent=`${r.label} · hour ${p[0].toFixed(1)} · ${p[1].toFixed(V.d)} ${V.u}`};
+      hit.onmousemove=e=>{tip.style.left=(e.clientX+12)+"px";tip.style.top=(e.clientY-30)+"px"};hit.onmouseleave=()=>tip.hidden=true});
+    if(p2.length){const last=p2[p2.length-1];labels.push({y:Y(last[1]),x:X(last[0]),t:r.label,col})}});
+  labels.sort((a,b)=>a.y-b.y);for(let i=1;i<labels.length;i++)if(labels[i].y-labels[i-1].y<16)labels[i].y=labels[i-1].y+16;
+  labels.forEach(l=>{el("line",{x1:l.x+6,x2:W-mr+4,y1:l.y,y2:l.y,style:`stroke:${l.col}`,"stroke-width":1,"stroke-dasharray":"2 3"},chart);
+    const t=el("text",{x:W-mr+8,y:l.y+4,class:"lab"},chart);t.textContent=l.t.length>14?l.t.slice(0,13)+"…":l.t});
+  el("text",{x:ml,y:H-mb+34,"text-anchor":"start"},chart).textContent="▲ = meal served"}
+
+/* ============ worksheet ============ */
+const EXPS={
+ A:{title:"Experiment A · Find the three metabolic states",
+  intro:"The textbook describes an absorptive (fed) state, a postabsorptive (fasting) state, and starvation. Your job is to find where one ends and the next begins, using your own measurements instead of the textbook's description.",
+  pred:{q:"After one meal, the volunteer fasts for 72 hours. Which fuel store will be used up first?",o:["Liver glycogen","Muscle glycogen","Body fat","Body protein"]},
+  steps:["Start a run for Experiment A with a typical adult.","Serve a meal at hour 0 (the “Mixed” preset works well).","Run the clock to hour 72. Plan your 10 blood draws so they cover the whole fast, with some early and some late.","Use at least 2 biopsies to check liver and muscle glycogen at different times."],
+  qs:[{id:"A1",q:"Using your blood draws, at about what hour did the volunteer leave the absorptive (fed) state? Cite the insulin and glucagon values you used as evidence."},
+      {id:"A2",q:"Compare your liver glycogen biopsies. How much did liver glycogen change between them, and which hormone was driving that change?"},
+      {id:"A3",q:"Blood glucose stayed in a fairly narrow range for 72 hours without food. What mainly kept it there?",o:["Muscle glycogen was released into the blood","The liver: first breaking down glycogen, then making new glucose (gluconeogenesis)","The brain stopped using glucose","Ketone bodies were converted back into glucose"]},
+      {id:"A4",q:"At what hour did ketones first rise above 0.5 mmol/L? Why does ketone production increase at that point rather than earlier?"}]},
+ B:{title:"Experiment B · Does the type of meal matter?",
+  intro:"Carbohydrate, protein, and fat are absorbed and handled differently. Compare how blood glucose and the pancreatic hormones respond to meals of about the same calories but different composition.",
+  pred:{q:"Four meals have about the same calories. Which will cause the biggest rise in blood insulin?",o:["The carb-heavy meal","The protein-heavy meal","The fat-heavy meal","They will all be about the same"]},
+  steps:["Start at least 3 runs for Experiment B, all with a typical adult.","In each run, serve a different meal type at hour 0 (carb-heavy, protein-heavy, fat-heavy). The presets are built to have similar calories.","In each run, take at least 5 blood draws in the first 6 hours. Early samples matter: responses peak within the first hour or two.","Use the Graph tab to overlay your runs."],
+  qs:[{id:"B1",q:"Overlay glucose and then insulin for your runs. Which meal gave the highest glucose peak, and which gave the highest insulin peak? Report the values and the hours."},
+      {id:"B2",q:"The protein-heavy meal raised glucagon as well as insulin, and blood glucose barely changed. Why would the body release glucagon after a meal with almost no carbohydrate?"},
+      {id:"B3",q:"Why does this experiment use meals with about the same number of calories?",o:["So the volunteer doesn't get hungry","To keep calories as a controlled variable, so differences come from the type of nutrient","Because fat has more calories per gram than carbohydrate","It doesn't matter; any meals would work"]},
+      {id:"B4",q:"Based on your data, what does a fat-heavy meal do to blood glucose and insulin? What might that mean for someone trying to manage their blood glucose?"}]},
+ C:{title:"Experiment C · What happens without insulin?",
+  intro:"In Type 1 diabetes, the pancreas makes little or no insulin. Compare a typical adult with an adult whose Type 1 diabetes is untreated, after the same meal.",
+  note:"In real life, people with Type 1 diabetes take insulin. Going without it is a medical emergency that can lead to diabetic ketoacidosis. This model shows why insulin matters so much.",
+  pred:{q:"After a meal, the blood glucose of a person with untreated Type 1 diabetes will…",o:["Rise and stay high","Rise, then return to normal like the typical adult's","Stay normal","Fall too low"]},
+  steps:["Start one run for Experiment C with a typical adult and one with the untreated Type 1 subject.","Serve the same meal at hour 0 in both runs.","In each run, take at least 6 blood draws spread across the first 24 hours.","Overlay glucose, insulin and ketones for the two runs."],
+  qs:[{id:"C1",q:"Compare the two volunteers' blood glucose at its peak and at about 12 hours. Report the values."},
+      {id:"C2",q:"Ketones rose in the Type 1 volunteer even though blood glucose was high. Using what insulin normally does to fat tissue and the liver, explain why."},
+      {id:"C3",q:"Which phrase best describes the body's cells in untreated Type 1 diabetes?",o:["Overfed: they take in too much glucose","Starving in the midst of plenty: glucose is abundant in the blood but can't get into many cells","Normal, because the brain still gets glucose","Protected, because ketones do the job of insulin"]},
+      {id:"C4",q:"Predict what would happen to blood glucose and ketones if the Type 1 volunteer took insulin with the meal. Use your typical adult's run as evidence."}]}};
+function dominant(m){const k=m.c*4+m.p*4+m.f*9;const sh={carb:m.c*4/k,protein:m.p*4/k,fat:m.f*9/k};const top=Object.entries(sh).sort((a,b)=>b[1]-a[1])[0];return top[1]>=0.5?top[0]:"mixed"}
+function checksFor(x){const R=DB.runs.filter(r=>r.exp===x);const blood=r=>r.samples.filter(s=>s.type==="blood");const bio=r=>r.samples.filter(s=>s.type==="biopsy");const meal0=r=>r.meals.find(m=>m.t<=0.5);
+  if(x==="A"){const ok=R.filter(r=>r.profile==="typical"&&meal0(r));const best=ok.sort((a,b)=>b.samples.length-a.samples.length)[0];
+    return[["A run with a typical adult and a meal at hour 0",!!best],
+      ["Run reached hour 72",!!best&&best.t>=72-1e-6],
+      ["At least 8 blood draws, from the first 4 hours to after hour 60",!!best&&blood(best).length>=8&&Math.min(...blood(best).map(s=>s.t))<=4&&Math.max(...blood(best).map(s=>s.t))>=60],
+      ["At least 2 biopsies",!!best&&bio(best).length>=2]]}
+  if(x==="B"){const ok=R.filter(r=>r.profile==="typical"&&meal0(r));const types=new Set(ok.map(r=>dominant(meal0(r))));
+    const kc=ok.map(r=>meal0(r).kcal);const sim=kc.length>=2&&Math.max(...kc)/Math.min(...kc)<=1.2;
+    const early=ok.filter(r=>blood(r).filter(s=>s.t<=6).length>=5);
+    return[["At least 3 runs with a typical adult and a meal at hour 0",ok.length>=3],
+      ["At least 3 different meal types (carb-, protein-, fat-heavy or mixed)",types.size>=3],
+      ["Meals have similar calories (within 20%)",ok.length>=2&&sim],
+      ["At least 5 blood draws in the first 6 hours, in at least 3 runs",early.length>=3]]}
+  const ty=R.find(r=>r.profile==="typical"&&meal0(r)),t1=R.find(r=>r.profile==="t1d"&&meal0(r));
+  const same=ty&&t1&&["c","p","f"].every(k=>meal0(ty)[k]===meal0(t1)[k]);
+  const enough=r=>r&&blood(r).filter(s=>s.t<=24).length>=6&&Math.max(...blood(r).map(s=>s.t))>=12;
+  return[["A typical-adult run with a meal at hour 0",!!ty],["An untreated Type 1 run with a meal at hour 0",!!t1],["Both runs got the same meal",!!same],["At least 6 blood draws in the first 24 hours in each run, reaching hour 12 or later",enough(ty)&&enough(t1)]]}
+let wsTab="A";
+const WSTABS=[["A","Experiment A"],["B","Experiment B"],["C","Experiment C"],["submit","Submit"]];
+WSTABS.forEach(([k,n])=>{const b=document.createElement("button");b.className="tab";b.type="button";b.role="tab";b.dataset.k=k;b.textContent=n;b.onclick=()=>{wsTab=k;renderWS()};$("wsTabs").appendChild(b)});
+const W=k=>DB.ws[k]||(DB.ws[k]={});
+function renderWS(){document.querySelectorAll("#wsTabs .tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.k===wsTab));if(["A","B","C"].includes(wsTab))$("nrExp").value=wsTab;
+  const box=$("ws");box.innerHTML="";
+  if(wsTab==="submit"){renderSubmit(box);return}
+  const E=EXPS[wsTab],w=W(wsTab);
+  box.innerHTML=`<div class="exp-intro"><h3>${E.title}</h3><p>${E.intro}</p>${E.note?`<div class="note">${E.note}</div>`:""}</div>
+   <div class="block" id="predBlock"><h4>1 · Predict before you collect data</h4><div class="q"><p>${E.pred.q}</p><div class="opts">${E.pred.o.map((o,i)=>`<label><input type="radio" name="pred${wsTab}" value="${i}" ${w.pred==i?"checked":""} ${w.locked?"disabled":""}> ${o}</label>`).join("")}</div>
+     <label class="f">Explain your reasoning<textarea id="predWhy" ${w.locked?"disabled":""}>${esc(w.predWhy||"")}</textarea></label></div>
+     <div class="row">${w.locked?`<span class="locked">✓ Prediction locked ${new Date(w.locked).toLocaleString()}</span>`:`<button class="btn primary" id="lockBtn" type="button">Lock in my prediction</button><span class="small muted">Once locked, it can't be changed. Lock it before you collect data.</span>`}</div></div>
+   <div class="block"><h4>2 · Procedure</h4><ol style="margin:0;padding-left:20px;display:grid;gap:4px">${E.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+     <div class="sec-t" style="margin-top:6px">Data requirements</div><ul class="checks" id="chk"></ul></div>
+   <div class="block"><h4>3 · Analyze your results</h4>${E.qs.map(q=>`<div class="q"><p>${q.id}. ${q.q}</p>${q.o?`<div class="opts">${q.o.map((o,i)=>`<label><input type="radio" name="${q.id}" value="${i}" ${w[q.id]==i?"checked":""}> ${o}</label>`).join("")}</div>`:`<textarea data-q="${q.id}" aria-label="Answer to ${q.id}">${esc(w[q.id]||"")}</textarea>`}</div>`).join("")}</div>`;
+  box.querySelectorAll(`input[name=pred${wsTab}]`).forEach(i=>i.onchange=()=>{w.pred=+i.value;save()});
+  const pw=$("predWhy");pw.oninput=()=>{w.predWhy=pw.value;save()};
+  const lb=$("lockBtn");if(lb)lb.onclick=()=>{if(w.pred===undefined||!(w.predWhy||"").trim()){lb.nextElementSibling.textContent="Choose an answer and explain your reasoning first.";lb.nextElementSibling.style.color="var(--warn)";return}
+    const R=DB.runs.filter(r=>r.exp===wsTab);w.lockedAfterSamples=R.reduce((a,r)=>a+r.samples.length,0);w.locked=Date.now();save();renderWS()};
+  E.qs.forEach(q=>{if(q.o)box.querySelectorAll(`input[name=${q.id}]`).forEach(i=>i.onchange=()=>{w[q.id]=+i.value;save()});
+    else{const t=box.querySelector(`[data-q=${q.id}]`);t.oninput=()=>{w[q.id]=t.value;save()}}});
+  refreshWS()}
+function refreshWS(){const ul=$("chk");if(!ul||wsTab==="submit")return;ul.innerHTML=checksFor(wsTab).map(([t,d])=>`<li class="${d?"done":""}"><span class="ic">${d?"✓":""}</span>${t}</li>`).join("")}
+function report(){const L=[];const pad=(s,n)=>String(s).padStart(n);
+  L.push("FASTING METABOLISM LAB · BIO200","Student: "+(DB.name||"(not entered)"),"Section: "+(DB.section||"(not entered)"),"Copied: "+new Date().toLocaleString(),"");
+  ["A","B","C"].forEach(x=>{const E=EXPS[x],w=W(x);L.push("=".repeat(64),E.title.toUpperCase(),"=".repeat(64));
+    L.push("Prediction: "+(w.pred!==undefined?E.pred.o[w.pred]:"(none)"),"Reasoning: "+(w.predWhy||"(none)"),
+      "Locked: "+(w.locked?new Date(w.locked).toLocaleString()+` (samples collected before locking: ${w.lockedAfterSamples||0})`:"NOT LOCKED"),"");
+    L.push("Data requirements:");checksFor(x).forEach(([t,d])=>L.push(`  [${d?"x":" "}] ${t}`));L.push("");
+    E.qs.forEach(q=>{L.push(`${q.id}. ${q.q}`);L.push("   "+(q.o?(w[q.id]!==undefined?q.o[w[q.id]]:"(no answer)"):((w[q.id]||"(no answer)").replace(/\n/g,"\n   "))));L.push("")});
+    const R=DB.runs.filter(r=>r.exp===x);L.push(`Runs for this experiment: ${R.length}`);
+    R.forEach(r=>{L.push("",`  Run: ${r.label} | Subject: ${PROFILES[r.profile]} | Reached hour ${r.t.toFixed(1)}`);
+      r.meals.forEach(m=>L.push(`  Meal at hour ${m.t.toFixed(1)}: ${m.items} (${m.kcal} kcal; C ${m.c} g, P ${m.p} g, F ${m.f} g)`));
+      const rows=[...r.samples].sort((a,b)=>a.t-b.t);
+      if(rows.length){L.push("  "+["Hour","Type","Glu","Ins","Gcg","Ket","FFA","BUN","LivGly","MusGly"].map((h,i)=>pad(h,i===1?7:7)).join(""));
+        rows.forEach(s=>L.push("  "+[s.t.toFixed(1),s.type==="blood"?"blood":"biopsy",...VARS.map(v=>s.v[v.k]===undefined?"-":s.v[v.k].toFixed(v.d))].map(c=>pad(c,7)).join("")))}
+      else L.push("  (no samples)")});L.push("")});
+  L.push("Units: Glu mg/dL · Ins µU/mL · Gcg pg/mL · Ket mmol/L · FFA mmol/L · BUN mg/dL · glycogen g");
+  return L.join("\n")}
+function renderSubmit(box){
+  const done=["A","B","C"].map(x=>{const w=W(x),E=EXPS[x];const ch=checksFor(x);const ans=E.qs.filter(q=>w[q.id]!==undefined&&String(w[q.id]).trim()!=="").length;
+    return`<li class="${w.locked&&ch.every(c=>c[1])&&ans===E.qs.length?"done":""}"><span class="ic">${w.locked&&ch.every(c=>c[1])&&ans===E.qs.length?"✓":""}</span>${E.title}: prediction ${w.locked?"locked":"not locked"} · data ${ch.filter(c=>c[1]).length}/${ch.length} · answers ${ans}/${E.qs.length}</li>`}).join("");
+  box.innerHTML=`<div class="exp-intro"><h3>Submit your lab report</h3><p>Copy your report and paste it into the Canvas assignment. It includes your predictions, answers, and every measurement you took.</p></div>
+   <div class="row" style="align-items:end"><label class="f" style="flex:1;min-width:200px">Your name<input type="text" id="stName" value="${esc(DB.name)}"></label><label class="f" style="flex:1;min-width:160px">Course section<input type="text" id="stSec" value="${esc(DB.section)}"></label></div>
+   <div class="block"><h4>Progress</h4><ul class="checks">${done}</ul></div>
+   <div class="row"><button class="btn primary" id="copyBtn" type="button">Copy my lab report</button><span class="status" id="copyMsg"></span></div>
+   <textarea class="report" id="repTxt" readonly aria-label="Lab report text"></textarea>
+   <div class="row" style="justify-content:space-between;border-top:1px dashed var(--line);padding-top:10px"><span class="small muted">Your work is saved in this browser only. Clearing site data or switching devices starts you over.</span>
+     <span class="confirm" id="resetWrap"><button class="btn sm" id="resetBtn" type="button" style="border-color:var(--bad);color:var(--bad)">Erase all lab data</button></span></div>`;
+  $("stName").oninput=e=>{DB.name=e.target.value;$("repTxt").value=report();save()};$("stSec").oninput=e=>{DB.section=e.target.value;$("repTxt").value=report();save()};
+  $("repTxt").value=report();
+  $("copyBtn").onclick=()=>{const t=report();$("repTxt").value=t;const ok=()=>{$("copyMsg").textContent="Copied. Paste it into Canvas.";$("copyMsg").style.color="var(--ok)"};
+    const fb=()=>{const ta=$("repTxt");ta.focus();ta.select();$("copyMsg").textContent="Your browser blocked copying. The report is selected below: press Ctrl+C (Cmd+C on Mac).";$("copyMsg").style.color="var(--warn)"};
+    try{navigator.clipboard.writeText(t).then(ok,fb)}catch(e){fb()}};
+  $("resetBtn").onclick=()=>{$("resetWrap").innerHTML='<span class="small" style="color:var(--bad);font-weight:700">Erase every run and answer?</span> <button class="btn sm" id="resetYes" type="button" style="border-color:var(--bad);color:var(--bad)">Yes, erase</button> <button class="btn sm" id="resetNo" type="button">Cancel</button>';
+    $("resetNo").onclick=()=>renderSubmit(box);
+    $("resetYes").onclick=()=>{DB={runs:[],cur:-1,plate:{},ws:{},name:"",section:"",nextId:1};S=null;try{localStorage.removeItem(KEY)}catch(e){};trav.splice(0).forEach(p=>p.g.remove());pool.splice(0).forEach(p=>p.g.remove());refreshAll();wsTab="A";renderWS();$("newRun").open=true;O.hour.textContent="0.0";O.since.textContent="No run yet";O.subj.textContent="Start a run in the Protocol panel";O.runl.textContent=""}}}
+
+/* ============ boot ============ */
+function refreshAll(){refreshProtocol();refreshNotebook();renderWS();if(!run()){$("result").innerHTML='<span class="muted">Start a run to begin. Use “+ Start a new run” in the Protocol panel.</span>'}}
+if(!DB.runs.length){DB.plate={...PRESETS[3].items};$("newRun").open=true;O.since.textContent="No run yet";O.subj.textContent="Start a run in the Protocol panel";}else loadRun(Math.max(0,Math.min(DB.cur,DB.runs.length-1)));
+refreshAll();renderWS();requestAnimationFrame(frame);
+})();
+</script>
+
+</body></html>
