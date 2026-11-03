@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BIO200 Simulations</title>
+<meta name="description" content="Free interactive simulations and virtual labs for BIO200 Nutrition at Waubonsee Community College.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+:root{
+  --bg:#f3f5f4; --surface:#ffffff; --ink:#1d2827; --muted:#5a6866; --line:#d4dcd8;
+  --accent:#0d6a70; --accent-ink:#ffffff; --accent-soft:#e1f0f0;
+  --display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#111716; --surface:#192120; --ink:#e4ebe8; --muted:#98a7a3; --line:#2f3c3a;
+  --accent:#53c2c8; --accent-ink:#0c1615; --accent-soft:#1d3436; color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:900px;margin:0 auto;padding:40px 16px 56px;display:grid;gap:28px}
+.eyebrow{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.9rem,5vw,2.6rem);line-height:1.1;margin:4px 0 8px}
+h2{font-family:var(--display);font-weight:600;font-size:1.3rem;margin:0 0 10px}
+.lede{margin:0;color:var(--muted);max-width:65ch}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;gap:8px;align-content:start}
+.card h3{margin:0;font-size:1.08rem}
+.card p{margin:0;color:var(--muted);font-size:.94rem}
+.tag{justify-self:start;font-size:.74rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:999px}
+.btn{justify-self:start;margin-top:4px;font-weight:700;text-decoration:none;background:var(--accent);color:var(--accent-ink);padding:8px 14px;border-radius:8px}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.soon{border-style:dashed}
+.soon .tag{color:var(--muted);background:transparent;border:1px solid var(--line)}
+.howto{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.howto ul{margin:0;padding-left:20px;display:grid;gap:4px}
+footer{font-size:.86rem;color:var(--muted)}
+footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <p class="eyebrow">BIO200 · Nutrition · Waubonsee Community College</p>
+    <h1>Interactive simulations</h1>
+    <p class="lede">Free virtual labs and simulations that go with the BIO200 open textbook. They run in any modern web browser on a computer, tablet or phone. No login or download is needed.</p>
+  </header>
+
+  <section aria-labelledby="available">
+    <h2 id="available">Available now</h2>
+    <div class="grid">
+      <article class="card">
+        <span class="tag">Chapter 10 · Virtual lab</span>
+        <h3>Fasting Metabolism Lab</h3>
+        <p>Feed a research volunteer, follow them through a fast, and collect blood and tissue samples to see how the body fuels itself between meals.</p>
+        <a class="btn" href="fasting-lab.html">Open the lab</a>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="coming">
+    <h2 id="coming">Coming soon</h2>
+    <div class="grid">
+      <article class="card soon">
+        <span class="tag">Chapter 9 · Simulation</span>
+        <h3>Iron Absorption Meal Builder</h3>
+        <p>Build a meal and see how other foods help or block iron absorption.</p>
+      </article>
+      <article class="card soon">
+        <span class="tag">Chapter 12 · Simulation</span>
+        <h3>Exercise Energy Systems</h3>
+        <p>See how the body shifts between fuels as exercise intensity and duration change.</p>
+      </article>
+      <article class="card soon">
+        <span class="tag">Chapter 4 · Simulation</span>
+        <h3>Fatty Acid Builder</h3>
+        <p>Build fatty acids and explore saturation and cis and trans bonds.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="howto" aria-labelledby="tips">
+    <h2 id="tips">Tips for students</h2>
+    <ul>
+      <li>Your work is saved in the browser you use. Finish a lab on the same device, and don't use a private or incognito window.</li>
+      <li>When a lab asks for a report, use its Copy report button and paste the text into your Canvas assignment.</li>
+      <li>Larger screens give the most room, but every lab also works on a phone.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>Part of the BIO200 open textbook: <a href="https://inkie.pressbooks.pub/bio200/">inkie.pressbooks.pub/bio200</a>.</p>
+  </footer>
+</main>
+</body>
+</html>
